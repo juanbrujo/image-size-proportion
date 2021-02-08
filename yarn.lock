@@ -1067,10 +1067,10 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@oruga-ui/oruga@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@oruga-ui/oruga/-/oruga-0.3.1.tgz#717ca1bfadab04ef8ea9135bb8440247ec02b8ab"
-  integrity sha512-XKDJ30iCbbfgyTPq15efdnvplC6hGCz1w51H5aYKq7Tgfy3NjowRp+OpYw/3pfJ3l5vHo9RBXd9AWNRWoNg6YQ==
+"@oruga-ui/oruga@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@oruga-ui/oruga/-/oruga-0.3.2.tgz#cddf7ece292eb87b2454c2afa6c17b6d7f4224ee"
+  integrity sha512-sQUAtdoD0YxzwRhhoxKWB0trFzj5Mpct4FD5WdAED4uopZBle6VHspBzOUVxP+3dj+tnkYusA8tn7TitDZRqbA==
 
 "@soda/friendly-errors-webpack-plugin@^1.7.1":
   version "1.7.1"
