@@ -35,6 +35,6 @@
     "vue-template-compiler": "^2.7.4"
   },
   "engines": {
-    "node": ">=16.17.0"
+    "node": ">=18.16.0"
   }
 }
