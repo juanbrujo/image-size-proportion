@@ -31,7 +31,7 @@
     "eslint-plugin-vue": "^9.19.2",
     "prettier": "^3.1.1",
     "sass": "^1.67.0",
-    "sass-loader": "^14.1.0",
+    "sass-loader": "^16.0.1",
     "vue-template-compiler": "^2.7.4"
   },
   "engines": {
