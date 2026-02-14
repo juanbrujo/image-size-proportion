@@ -73,6 +73,27 @@
     manualTargetHeight = 720;
     targetSizeMode = "width";
   }
+
+  // Handle image upload
+  let fileInput;
+
+  function handleImageUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const img = new Image();
+    img.onload = function() {
+      originalWidth = this.width;
+      originalHeight = this.height;
+      // Reset file input so same file can be selected again
+      e.target.value = '';
+    };
+    img.src = URL.createObjectURL(file);
+  }
+
+  function triggerFileInput() {
+    fileInput.click();
+  }
 </script>
 
 <div class="min-h-screen bg-background text-foreground p-4 md:p-8">
@@ -96,9 +117,9 @@
           </CardTitle>
           <CardDescription class="flex items-center gap-2">
             Enter the original image dimensions or 
-            <Button variant="link" size="sm" class="p-0 h-auto" style="cursor: pointer;">
+            <Button variant="link" size="sm" class="p-0 h-auto" style="cursor: pointer;" onclick={triggerFileInput}>
               <Upload class="w-3 h-3 mr-1" />
-              upload an image to calculate
+              upload an image
             </Button>
           </CardDescription>
         </CardHeader>
@@ -111,6 +132,7 @@
                 type="number" 
                 bind:value={originalWidth} 
                 min="1"
+                max="10000"
                 placeholder="1920" 
               />
             </div>
@@ -121,6 +143,7 @@
                 type="number" 
                 bind:value={originalHeight} 
                 min="1"
+                max="10000"
                 placeholder="1080" 
               />
             </div>
@@ -169,6 +192,7 @@
                 type="number" 
                 bind:value={manualTargetWidth} 
                 min="1"
+                max="10000"
                 placeholder="1280"
                 disabled={targetSizeMode !== "width"}
               />
@@ -182,6 +206,7 @@
                 type="number" 
                 bind:value={manualTargetHeight} 
                 min="1"
+                max="10000"
                 placeholder="720"
                 disabled={targetSizeMode !== "height"}
               />
@@ -212,6 +237,15 @@
         </CardContent>
       </Card>
     </div>
+
+    <!-- Hidden file input for image upload -->
+    <input
+      bind:this={fileInput}
+      type="file"
+      accept="image/*"
+      class="hidden"
+      onchange={handleImageUpload}
+    />
 
     <!-- Footer -->
     <div class="flex flex-col items-center gap-4">
