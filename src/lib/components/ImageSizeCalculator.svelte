@@ -7,7 +7,7 @@
   import Input from "./ui/Input.svelte";
   import Label from "./ui/Label.svelte";
   import Button from "./ui/Button.svelte";
-  import { RefreshCw, Scaling, Calculator } from "lucide-svelte";
+  import { RefreshCw, Scaling, Calculator, Github } from "lucide-svelte";
 
   // Original dimensions
   let originalWidth = $state(1920);
@@ -63,6 +63,15 @@
       // Calculate width based on height using original proportion
       manualTargetWidth = Math.round((manualTargetHeight / originalHeight) * originalWidth);
     }
+  }
+
+  // Reset all values to defaults
+  function resetValues() {
+    originalWidth = 1920;
+    originalHeight = 1080;
+    manualTargetWidth = 1280;
+    manualTargetHeight = 720;
+    targetSizeMode = "width";
   }
 </script>
 
@@ -199,8 +208,20 @@
     </div>
 
     <!-- Footer -->
-    <div class="text-center text-sm text-muted-foreground">
-      Enter dimensions to calculate proportions in real-time
+    <div class="flex flex-col items-center gap-4">
+      <Button onclick={resetValues} style="cursor: pointer;">
+        <RefreshCw class="w-4 h-4 mr-2" />
+        Reset Values
+      </Button>
+      <a 
+        href="https://github.com/juanbrujo/image-size-proportion" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <span>© Copyleft {new Date().getFullYear()} // Jorge Epuñan</span>
+        <Github class="w-4 h-4" />
+      </a>
     </div>
   </div>
 </div>
