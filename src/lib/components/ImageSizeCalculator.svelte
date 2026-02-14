@@ -8,6 +8,7 @@
   import Label from "./ui/Label.svelte";
   import Button from "./ui/Button.svelte";
   import { RefreshCw, Scaling, Calculator, Github, Upload } from "lucide-svelte";
+  import { gcd, calculateAspectRatio, calculateTargetSize } from "../utils.js";
 
   // Original dimensions
   let originalWidth = $state(1920);
@@ -23,21 +24,9 @@
 
   // Aspect ratio
   let aspectRatio = $derived({
-    original: originalWidth > 0 && originalHeight > 0 ? gcd(originalWidth, originalHeight) : { w: 0, h: 0 },
-    target: manualTargetWidth > 0 && manualTargetHeight > 0 ? gcd(manualTargetWidth, manualTargetHeight) : { w: 0, h: 0 }
+    original: calculateAspectRatio(originalWidth, originalHeight),
+    target: calculateAspectRatio(manualTargetWidth, manualTargetHeight)
   });
-
-  // GCD function for aspect ratio calculation
-  function gcd(a, b) {
-    a = Math.abs(Math.round(a));
-    b = Math.abs(Math.round(b));
-    while (b) {
-      const t = b;
-      b = a % b;
-      a = t;
-    }
-    return { w: Math.round(originalWidth / a), h: Math.round(originalHeight / a) };
-  }
 
   // Swap dimensions
   function swapOriginal() {
@@ -53,15 +42,13 @@
   }
 
   // Calculate the disabled dimension based on original proportion
-  function calculateTargetSize() {
+  function handleCalculate() {
     if (originalWidth === 0 || originalHeight === 0) return;
     
     if (targetSizeMode === "width") {
-      // Calculate height based on width using original proportion
-      manualTargetHeight = Math.round((manualTargetWidth / originalWidth) * originalHeight);
+      manualTargetHeight = calculateTargetSize(originalWidth, originalHeight, manualTargetWidth, "width");
     } else {
-      // Calculate width based on height using original proportion
-      manualTargetWidth = Math.round((manualTargetHeight / originalHeight) * originalWidth);
+      manualTargetWidth = calculateTargetSize(originalWidth, originalHeight, manualTargetHeight, "height");
     }
   }
 
@@ -213,7 +200,7 @@
             </div>
           </div>
           <div class="mt-4 flex items-center justify-between">
-            <Button onclick={calculateTargetSize} style="cursor: pointer;">
+            <Button onclick={handleCalculate} style="cursor: pointer;">
               <Calculator class="w-4 h-4 mr-2" />
               Calculate
             </Button>
