@@ -7,7 +7,7 @@
   import Input from "./ui/Input.svelte";
   import Label from "./ui/Label.svelte";
   import Button from "./ui/Button.svelte";
-  import { RefreshCw, Scaling, Calculator, Github } from "lucide-svelte";
+  import { RefreshCw, Scaling, Calculator, Github, Upload } from "lucide-svelte";
 
   // Original dimensions
   let originalWidth = $state(1920);
@@ -83,7 +83,7 @@
         <Scaling class="w-8 h-8 text-primary" />
         <h1 class="text-3xl font-bold tracking-tight" style="font-family: var(--font-serif);font-size:2.6rem;">Image Size Proportion Calculator</h1>
       </div>
-      <p class="text-muted-foreground">Calculate proportions between two image sizes in pixels</p>
+      <p class="text-muted-foreground">Calculate proportions between two image sizes in pixels.</p>
     </div>
 
     <div class="grid md:grid-cols-2 gap-6">
@@ -94,7 +94,13 @@
             <span class="w-3 h-3 rounded-full bg-primary"></span>
             Original Size
           </CardTitle>
-          <CardDescription>Enter the original image dimensions</CardDescription>
+          <CardDescription class="flex items-center gap-2">
+            Enter the original image dimensions or 
+            <Button variant="link" size="sm" class="p-0 h-auto" style="cursor: pointer;">
+              <Upload class="w-3 h-3 mr-1" />
+              upload an image to calculate
+            </Button>
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div class="grid grid-cols-2 gap-4">
@@ -150,7 +156,7 @@
             <span class="w-3 h-3 rounded-full bg-secondary"></span>
             Target Size
           </CardTitle>
-          <CardDescription>Enter the target image dimensions</CardDescription>
+          <CardDescription>Enter the desired target image dimension</CardDescription>
         </CardHeader>
         <CardContent>
           <div class="grid grid-cols-2 gap-4">
