@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  --font-serif: 'Instrument Serif', serif;
   --background: 0 0% 7%;
   --foreground: 0 0% 95%;
   --card: 0 0% 10%;

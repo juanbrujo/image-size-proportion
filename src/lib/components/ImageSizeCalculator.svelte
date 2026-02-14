@@ -7,7 +7,7 @@
   import Input from "./ui/Input.svelte";
   import Label from "./ui/Label.svelte";
   import Button from "./ui/Button.svelte";
-  import { RefreshCw, Scaling } from "lucide-svelte";
+  import { RefreshCw, Scaling, Calculator } from "lucide-svelte";
 
   // Original dimensions
   let originalWidth = $state(1920);
@@ -17,6 +17,9 @@
   let manualMode = $state(false);
   let manualTargetWidth = $state(1280);
   let manualTargetHeight = $state(720);
+
+  // Radio selection for target size (width or height)
+  let targetSizeMode = $state("width"); // "width" or "height"
 
   // Aspect ratio
   let aspectRatio = $derived({
@@ -48,6 +51,19 @@
     manualTargetWidth = manualTargetHeight;
     manualTargetHeight = temp;
   }
+
+  // Calculate the disabled dimension based on original proportion
+  function calculateTargetSize() {
+    if (originalWidth === 0 || originalHeight === 0) return;
+    
+    if (targetSizeMode === "width") {
+      // Calculate height based on width using original proportion
+      manualTargetHeight = Math.round((manualTargetWidth / originalWidth) * originalHeight);
+    } else {
+      // Calculate width based on height using original proportion
+      manualTargetWidth = Math.round((manualTargetHeight / originalHeight) * originalWidth);
+    }
+  }
 </script>
 
 <div class="min-h-screen bg-background text-foreground p-4 md:p-8">
@@ -56,7 +72,7 @@
     <div class="text-center space-y-2 mb-8">
       <div class="flex items-center justify-center gap-2">
         <Scaling class="w-8 h-8 text-primary" />
-        <h1 class="text-3xl font-bold tracking-tight">Image Size Proportion Calculator</h1>
+        <h1 class="text-3xl font-bold tracking-tight" style="font-family: var(--font-serif);font-size:2.6rem;">Image Size Proportion Calculator</h1>
       </div>
       <p class="text-muted-foreground">Calculate proportions between two image sizes in pixels</p>
     </div>
@@ -65,7 +81,7 @@
       <!-- Original Size Card -->
       <Card>
         <CardHeader>
-          <CardTitle class="flex items-center gap-2">
+          <CardTitle class="text-3xl flex items-center gap-2" style="font-family: var(--font-serif);font-size:">
             <span class="w-3 h-3 rounded-full bg-primary"></span>
             Original Size
           </CardTitle>
@@ -98,7 +114,7 @@
             <span class="text-sm text-muted-foreground">
               Aspect Ratio: <span class="text-foreground font-mono">{aspectRatio.original.w}:{aspectRatio.original.h}</span>
             </span>
-            <Button variant="ghost" size="sm" onclick={swapOriginal}>
+            <Button variant="ghost" size="sm" onclick={swapOriginal} style="cursor: pointer;">
               <RefreshCw class="w-4 h-4 mr-1" />
               Swap
             </Button>
@@ -121,7 +137,7 @@
       <!-- Target Size Card -->
       <Card>
         <CardHeader>
-          <CardTitle class="flex items-center gap-2">
+          <CardTitle class="text-3xl flex items-center gap-2" style="font-family: var(--font-serif);">
             <span class="w-3 h-3 rounded-full bg-secondary"></span>
             Target Size
           </CardTitle>
@@ -130,31 +146,38 @@
         <CardContent>
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
-              <Label for="target-width">Width (px)</Label>
+              <Label class="flex items-center gap-2">
+                <input type="radio" name="target-size" value="width" checked={targetSizeMode === "width"} onchange={() => targetSizeMode = "width"} /> Width (px)
+              </Label>
               <Input 
                 id="target-width" 
                 type="number" 
                 bind:value={manualTargetWidth} 
                 min="1"
-                placeholder="1280" 
+                placeholder="1280"
+                disabled={targetSizeMode !== "width"}
               />
             </div>
             <div class="space-y-2">
-              <Label for="target-height">Height (px)</Label>
+              <Label class="flex items-center gap-2">
+                <input type="radio" name="target-size" value="height" checked={targetSizeMode === "height"} onchange={() => targetSizeMode = "height"} /> Height (px)
+              </Label>
               <Input 
                 id="target-height" 
                 type="number" 
                 bind:value={manualTargetHeight} 
                 min="1"
-                placeholder="720" 
+                placeholder="720"
+                disabled={targetSizeMode !== "height"}
               />
             </div>
           </div>
           <div class="mt-4 flex items-center justify-between">
-            <span class="text-sm text-muted-foreground">
-              Aspect Ratio: <span class="text-foreground font-mono">{aspectRatio.target.w}:{aspectRatio.target.h}</span>
-            </span>
-            <Button variant="ghost" size="sm" onclick={swapTarget}>
+            <Button onclick={calculateTargetSize} style="cursor: pointer;">
+              <Calculator class="w-4 h-4 mr-2" />
+              Calculate
+            </Button>
+            <Button variant="ghost" size="sm" onclick={swapTarget} style="cursor: pointer;">
               <RefreshCw class="w-4 h-4 mr-1" />
               Swap
             </Button>
