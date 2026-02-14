@@ -7,7 +7,7 @@
   import Input from "./ui/Input.svelte";
   import Label from "./ui/Label.svelte";
   import Button from "./ui/Button.svelte";
-  import { RefreshCw, Scaling, Calculator, Github, Upload } from "lucide-svelte";
+  import { RefreshCw, Scaling, Calculator, Github, Upload, X } from "lucide-svelte";
   import { gcd, calculateAspectRatio, calculateTargetSize } from "../utils.js";
 
   // Original dimensions
@@ -59,15 +59,20 @@
     manualTargetWidth = 1280;
     manualTargetHeight = 720;
     targetSizeMode = "width";
+    clearUploadedImage();
   }
 
   // Handle image upload
   let fileInput;
+  let uploadedImageUrl = $state(null);
+  let uploadedFileName = $state("");
 
   function handleImageUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
 
+    uploadedFileName = file.name;
+    
     const img = new Image();
     img.onload = function() {
       originalWidth = this.width;
@@ -75,7 +80,15 @@
       // Reset file input so same file can be selected again
       e.target.value = '';
     };
-    img.src = URL.createObjectURL(file);
+    uploadedImageUrl = URL.createObjectURL(file);
+  }
+
+  function clearUploadedImage() {
+    if (uploadedImageUrl) {
+      URL.revokeObjectURL(uploadedImageUrl);
+      uploadedImageUrl = null;
+      uploadedFileName = "";
+    }
   }
 
   function triggerFileInput() {
@@ -146,15 +159,42 @@
           </div>
           <!-- Visual Representation -->
           <div class="mt-4 p-3 rounded-lg bg-muted/30 border">
-            <div class="text-xs text-muted-foreground mb-2">Visual</div>
-            <div class="flex justify-center">
-              <div 
-                class="bg-primary/30 border-2 border-primary rounded flex items-center justify-center text-xs"
-                style="width: {Math.min(120, (originalWidth / originalHeight) * 80)}px; height: {Math.min(80, (originalHeight / originalWidth) * 120)}px; max-height: 80px;"
-              >
-                <span class="text-[10px] text-center leading-tight">{originalWidth}×{originalHeight}</span>
-              </div>
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-xs text-muted-foreground">Visual</div>
+              {#if uploadedImageUrl}
+                <button 
+                  onclick={clearUploadedImage} 
+                  class="text-xs text-muted-foreground hover:text-destructive flex items-center gap-1 transition-colors"
+                >
+                  <X class="w-3 h-3" />
+                  Clear
+                </button>
+              {/if}
             </div>
+            {#if uploadedImageUrl}
+              <div class="flex justify-center">
+                <div class="relative group">
+                  <img 
+                    src={uploadedImageUrl} 
+                    alt="Uploaded preview"
+                    class="max-w-full max-h-32 rounded border-2 border-primary/50 object-contain"
+                    style="aspect-ratio: {originalWidth}/{originalHeight}"
+                  />
+                  <div class="absolute bottom-1 left-1/2 -translate-x-1/2 bg-black/70 text-white text-[10px] px-2 py-0.5 rounded">
+                    {uploadedFileName}
+                  </div>
+                </div>
+              </div>
+            {:else}
+              <div class="flex justify-center">
+                <div 
+                  class="bg-primary/30 border-2 border-primary rounded flex items-center justify-center text-xs"
+                  style="width: {Math.min(120, (originalWidth / originalHeight) * 80)}px; height: {Math.min(80, (originalHeight / originalWidth) * 120)}px; max-height: 80px;"
+                >
+                  <span class="text-[10px] text-center leading-tight">{originalWidth}×{originalHeight}</span>
+                </div>
+              </div>
+            {/if}
           </div>
         </CardContent>
       </Card>
